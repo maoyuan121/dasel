@@ -10,16 +10,16 @@ import (
 )
 
 type selectOptions struct {
-	File                string
-	Parser              string
-	ReadParser          string
-	WriteParser         string
-	Selector            string
+	File                string // 文件名， 如果为空 `-` 或者 `stdin` 那就代表从控制台中读取
+	Parser              string // 文件解析器
+	ReadParser          string // 读取文件解析器 大致同上
+	WriteParser         string // 写文件解析器 大致同上
+	Selector            string // 选择器
 	Reader              io.Reader
 	Writer              io.Writer
 	Multi               bool
 	NullValueNotFound   bool
-	Compact             bool
+	Compact             bool // 是否压缩内容，去掉空白换行
 	DisplayLength       bool
 	MergeInputDocuments bool
 	FormatTemplate      string

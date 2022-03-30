@@ -12,15 +12,16 @@
 [![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/TomWright/dasel?label=latest%20release)](https://github.com/TomWright/dasel/releases/latest)
 [![Homebrew tag (latest by date)](https://img.shields.io/homebrew/v/dasel)](https://formulae.brew.sh/formula/dasel)
 
-Dasel (short for data-selector) allows you to query and modify data structures using selector strings.
+Dasel(data-selector 的缩写)允许您使用选择器字符串查询和修改数据结构。
 
-Comparable to [jq](https://github.com/stedolan/jq) / [yq](https://github.com/kislyuk/yq), but supports JSON, YAML, TOML, XML and CSV with zero runtime dependencies.
+和 [jq](https://github.com/stedolan/jq) / [yq](https://github.com/kislyuk/yq) 比起来，dasel 支持 JSON, YAML, TOML, XML 和 CSV。
 
 ## One tool to rule them all
 
-Say good bye to learning new tools just to work with a different data format.
+不要再为了使用不同的数据格式而学习新工具了。
 
-Dasel uses a standard selector syntax no matter the data format. This means that once you learn how to use dasel you immediately have the ability to query/modify any of the supported data types without any additional tools or effort. 
+无论数据格式如何，Dasel 都使用标准的选择器语法。这意味着，一旦您学会了如何使用 dasel，您就可以立即查询/修改任何受支持的数据类型，
+而无需任何额外的工具或工作。
 
 ![Update Kubernetes Manifest](update_kubernetes.gif)
 
@@ -59,14 +60,14 @@ echo '{"name": "Tom"}' | dasel -r json '.name'
 
 See [select documentation](https://daseldocs.tomwright.me/usage/select).
 
-### Convert json to yaml
+### 将 json 转为 yaml
 
 ```bash
 echo '{"name": "Tom"}' | dasel -r json -w yaml
 name: Tom
 ```
 
-See [select documentation](https://daseldocs.tomwright.me/usage/select).
+查看 [select documentation](https://daseldocs.tomwright.me/usage/select).
 
 ### Put
 
