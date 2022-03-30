@@ -9,25 +9,25 @@ import (
 	"regexp"
 )
 
-// Selector represents the selector for a node.
+// Selector 表示一个 Node 的选择去
 type Selector struct {
-	// Raw is the full selector.
+	// Raw 是完整的 selector
 	Raw string `json:"raw"`
-	// Current is the selector to be used with the current node.
+	// Current 是与当前节点一起使用的选择器。
 	Current string `json:"current"`
-	// Remaining is the remaining parts of the Raw selector.
+	// Remaining 是 Raw 选择器的剩余部分
 	Remaining string `json:"remaining"`
-	// Type is the type of the selector.
+	// Type 是 selector 类型
 	Type string `json:"type"`
-	// Property is the name of the property this selector targets, if applicable.
+	// Property 是此选择器目标属性的名称(如果适用的话)。
 	Property string `json:"property,omitempty"`
-	// Index is the index to use if applicable.
+	// Index 是要使用的索引(如果适用的话)。
 	Index int `json:"index,omitempty"`
-	// Conditions contains a set of conditions to optionally match a target.
+	// Conditions 包含一组可选的匹配目标的条件。
 	Conditions []Condition `json:"conditions,omitempty"`
 }
 
-// Copy returns a copy of the selector.
+// Copy 返回一个 selector 的拷贝
 func (s Selector) Copy() Selector {
 	return Selector{
 		Raw:        s.Raw,
@@ -40,35 +40,35 @@ func (s Selector) Copy() Selector {
 	}
 }
 
-// Node represents a single node in the chain of nodes for a selector.
+// Node表示选择器的节点链中的单个节点。
 type Node struct {
-	// Previous is the previous node in the chain.
+	// Previous 是链中前一个节点
 	Previous *Node `json:"-"`
-	// Next contains the next node in the chain.
-	// This is used with Query and Put requests.
+	// Next 是链中的下一个节点
+	// 与 Query 和 Put 请求一起使用。
 	Next *Node `json:"next,omitempty"`
-	// NextMultiple contains the next nodes in the chain.
-	// This is used with QueryMultiple and PutMultiple requests.
-	// When a major version change occurs this will completely replace Next.
+	// NextMultiple 包含链中的下一个节点
+	// 与 QueryMultiple和  PutMultiple 请求一起使用的。
+	// 当发生大版本变更时，将完全替换 Next。
 	NextMultiple []*Node `json:"nextMultiple,omitempty"`
-	// OriginalValue is the value returned from the parser.
-	// In most cases this is the same as Value, but is different for thr YAML parser
-	// as it contains information on the original document.
+	// OriginalValue 是解析器返回的值。
+	// 在大多数情况下，这与 Value 相同，但对于 thr YAML 解析器不同
+	// 因为它包含原始文档的信息。
 	OriginalValue interface{} `json:"-"`
-	// Value is the value of the current node.
+	// Value 是当前节点的值
 	Value reflect.Value `json:"value"`
-	// Selector is the selector for the current node.
+	// Selector 是当前节点的选择器
 	Selector       Selector `json:"selector"`
 	wasInitialised bool
 }
 
-// String returns the value of the node as a string.
-// No formatting is done here, you get the raw value.
+// String 以字符串的形式返回节点的值
+// 没有格式，得到的是 raw value
 func (n *Node) String() string {
 	return fmt.Sprint(n.InterfaceValue())
 }
 
-// InterfaceValue returns the value stored within the node as an interface{}.
+// InterfaceValue 以 interface{} 的形式返回存储在节点中的值。
 func (n *Node) InterfaceValue() interface{} {
 	// We shouldn't be able to get here but this will stop a panic if we do.
 	if !n.Value.IsValid() {
@@ -105,6 +105,7 @@ func nilValue() reflect.Value {
 	return reflect.ValueOf(nil)
 }
 
+// 如果是接口类型，那么返回其 Elem，否则直接返回 value
 func unwrapValue(value reflect.Value) reflect.Value {
 	// value = reflect.Indirect(value)
 	if value.Kind() == reflect.Interface {
@@ -113,7 +114,7 @@ func unwrapValue(value reflect.Value) reflect.Value {
 	return value
 }
 
-// New returns a new root node with the given value.
+// New 用给定的值返回一个新的根节点
 func New(value interface{}) *Node {
 	rootNode := &Node{
 		Previous:     nil,
@@ -131,7 +132,7 @@ func New(value interface{}) *Node {
 	return rootNode
 }
 
-// NewFromFile returns a new root node by parsing file using specified read parser.
+// NewFromFile 通过使用指定的读解析器解析文件，返回一个新的根节点。
 func NewFromFile(filename, parser string) (*Node, error) {
 	readParser, err := storage.NewReadParserFromString(parser)
 	if err != nil {
@@ -146,7 +147,7 @@ func NewFromFile(filename, parser string) (*Node, error) {
 	return New(data), nil
 }
 
-// NewFromReader returns a new root node by parsing from Reader using specified read parser.
+// NewFromReader 通过使用指定的读解析器从 Reader中解析，返回一个新的根节点。
 func NewFromReader(reader io.Reader, parser string) (*Node, error) {
 	readParser, err := storage.NewReadParserFromString(parser)
 	if err != nil {
@@ -161,7 +162,7 @@ func NewFromReader(reader io.Reader, parser string) (*Node, error) {
 	return New(data), nil
 }
 
-// WriteToFile writes data to the given file with the specified options.
+// WriteToFile 使用指定的选项将数据写入给定的文件。
 func (n *Node) WriteToFile(filename, parser string, writeOptions []storage.ReadWriteOption) error {
 	f, err := os.Create(filename)
 
@@ -178,7 +179,7 @@ func (n *Node) WriteToFile(filename, parser string, writeOptions []storage.ReadW
 	return f.Close()
 }
 
-// Write writes data to Writer using specified write parser and options.
+// Write 使用指定的写解析器和选项将写数据写入写入器。
 func (n *Node) Write(writer io.Writer, parser string, writeOptions []storage.ReadWriteOption) error {
 	writeParser, err := storage.NewWriteParserFromString(parser)
 	if err != nil {
